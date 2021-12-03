@@ -233,11 +233,16 @@ form ul.actions > li {
   margin-right: 1em;
 }
 
+.hidden {
+  display: none;
+}
+
 form.loaded * {
   max-height: 1000px;
   transition: max-height .2s;
 }
 form .hidden {
+  display: block;
   max-height: 0;
   overflow: hidden;
 }
