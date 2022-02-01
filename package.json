@@ -50,7 +50,7 @@
     "docs": "typedoc",
     "jest": "jest --coverageReporters text-summary --",
     "lint": "eslint . --cache --ignore-path .gitignore",
-    "prepare": "npm run build",
+    "prepare": "husky install && npm run build",
     "start": "node ./bin/server.js",
     "start:file": "node ./bin/server.js -c config/file.json -f ./data",
     "test": "npm run test:ts && npm run jest",
@@ -62,11 +62,6 @@
     "validate": "componentsjs-compile-config urn:solid-server:default:Initializer -c config/default.json -f > /dev/null",
     "version": "manual-git-changelog onversion",
     "watch": "nodemon --watch \"dist/**/*.js\" --exec npm start"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run build && npm run lint && npm run test:unit && npm run test:integration"
-    }
   },
   "files": [
     "bin",
@@ -152,7 +147,7 @@
     "eslint-plugin-tsdoc": "^0.2.14",
     "eslint-plugin-unused-imports": "^2.0.0",
     "fs-extra": "^10.0.0",
-    "husky": "^4.3.8",
+    "husky": "^7.0.4",
     "jest": "^27.0.6",
     "jest-rdf": "^1.6.0",
     "manual-git-changelog": "^1.0.1",
