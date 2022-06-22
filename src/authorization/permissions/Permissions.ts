@@ -9,6 +9,8 @@ export enum AccessMode {
   write = 'write',
   create = 'create',
   delete = 'delete',
+  readOnly = 'readOnly',
+  hide = 'hide',
 }
 
 /**

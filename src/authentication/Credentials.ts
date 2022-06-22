@@ -11,6 +11,7 @@ export interface Credential {
 export enum CredentialGroup {
   public = 'public',
   agent = 'agent',
+  attributes = 'attributes',
 }
 
 /**

@@ -49,6 +49,6 @@ export class BasicRequestParser extends RequestParser {
     const conditions = await this.conditionsParser.handleSafe(request);
     const body = await this.bodyParser.handleSafe({ request, metadata });
 
-    return { method, target, preferences, conditions, body };
+    return { method, target, preferences, conditions, body, attributePermissions: { 'readOnly': [], 'hide': [] } = { 'readOnly': [], 'hide': [] } };
   }
 }

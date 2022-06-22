@@ -47,6 +47,8 @@ export class RepresentationMetadata {
   private store: Store;
   private id: NamedNode | BlankNode;
 
+  public attributePermissions: { 'readOnly': any[], 'hide': any[] } = { 'readOnly': [], 'hide': [] };
+
   /**
    * @param identifier - Identifier of the resource relevant to this metadata.
    *                     A blank node will be generated if none is provided.

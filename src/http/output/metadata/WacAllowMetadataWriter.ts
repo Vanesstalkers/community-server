@@ -30,6 +30,10 @@ export class WacAllowMetadataWriter extends MetadataWriter {
     // Only add the header if there are permissions to show
     if (headerStrings.length > 0) {
       addHeader(input.response, 'WAC-Allow', headerStrings.join(','));
+      addHeader(input.response, 'WAC-Allow-Attributes', JSON.stringify({
+        'readOnly': input.metadata.attributePermissions.readOnly.map(item => item.value),
+        'hide': input.metadata.attributePermissions.hide.map(item => item.value),
+      }));
     }
   }
 

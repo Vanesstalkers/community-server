@@ -57,7 +57,7 @@ export class WebAclReader extends PermissionReader {
    * Will throw an error if this is not the case.
    * @param input - Relevant data needed to check if access can be granted.
    */
-  public async handle({ identifier, credentials, modes }: PermissionReaderInput):
+  public async handle({ identifier, credentials, modes, attributePermissions }: PermissionReaderInput):
   Promise<PermissionSet> {
     // Determine the required access modes
     this.logger.debug(`Retrieving permissions of ${credentials.agent?.webId} for ${identifier.path}`);
@@ -95,6 +95,17 @@ export class WebAclReader extends PermissionReader {
       permissions[CredentialGroup.public]!.delete =
         permissions[CredentialGroup.public]!.write && parentPermissions[CredentialGroup.public]!.write;
     }
+
+    const aclRules = acl.targetAcl.getSubjects(RDF.type, ACL.Authorization, null);
+    for (const rule of aclRules) {
+      acl.targetAcl.getObjects(rule, 'http://zteq.com/ac/0.1/readOnly', null).forEach( obj => {
+        attributePermissions.readOnly.push(obj);
+      });
+      acl.targetAcl.getObjects(rule, 'http://zteq.com/ac/0.1/hide', null).forEach( obj => {
+        attributePermissions.hide.push(obj);
+      });
+    }
+
     return permissions;
   }
 

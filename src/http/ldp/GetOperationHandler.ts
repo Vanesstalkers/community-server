@@ -25,7 +25,7 @@ export class GetOperationHandler extends OperationHandler {
 
   public async handle({ operation }: OperationHandlerInput): Promise<ResponseDescription> {
     const body = await this.store.getRepresentation(operation.target, operation.preferences, operation.conditions);
-
+    body.metadata.attributePermissions = operation.attributePermissions;
     return new OkResponseDescription(body.metadata, body.data);
   }
 }

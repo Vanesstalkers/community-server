@@ -18,6 +18,8 @@ export interface PermissionReaderInput {
    * However, non-exhaustive information about other access modes can still be returned.
    */
   modes: Set<AccessMode>;
+
+  attributePermissions: { 'readOnly': any[], 'hide': any[] };
 }
 
 /**

@@ -276,6 +276,7 @@ export class IdentityProviderFactory implements ProviderFactory {
     config.interactions = {
       url: async(ctx, oidcInteraction): Promise<string> => {
         const operation: Operation = {
+          attributePermissions: { 'readOnly': [], 'hide': [] },
           method: ctx.method,
           target: { path: ctx.request.href },
           preferences: {},

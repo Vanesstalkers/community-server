@@ -8,6 +8,7 @@ import type { ResourceIdentifier } from './representation/ResourceIdentifier';
  * A single REST operation.
  */
 export interface Operation {
+  attributePermissions: { 'readOnly': any[], 'hide': any[] };
   /**
    * The HTTP method (GET/POST/PUT/PATCH/DELETE/etc.).
    */
