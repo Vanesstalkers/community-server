@@ -27,7 +27,8 @@
         "Location",
         "MS-Author-Via",
         "Updates-Via",
-        "WAC-Allow"
+        "WAC-Allow",
+        "WAC-Allow-Attributes"
       ]
     }
   ]
