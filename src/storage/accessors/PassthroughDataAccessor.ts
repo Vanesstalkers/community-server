@@ -1,6 +1,7 @@
 import type { Readable } from 'stream';
 import type { Representation } from '../../http/representation/Representation';
 import type { RepresentationMetadata } from '../../http/representation/RepresentationMetadata';
+import type { RepresentationPreferences } from '../../http/representation/RepresentationPreferences';
 import type { ResourceIdentifier } from '../../http/representation/ResourceIdentifier';
 import type { Guarded } from '../../util/GuardedStream';
 import type { AtomicDataAccessor } from './AtomicDataAccessor';
@@ -31,8 +32,8 @@ export class PassthroughDataAccessor implements DataAccessor {
     return this.accessor.canHandle(representation);
   }
 
-  public async getData(identifier: ResourceIdentifier): Promise<Guarded<Readable>> {
-    return this.accessor.getData(identifier);
+  public async getData(identifier: ResourceIdentifier, preferences: RepresentationPreferences): Promise<Guarded<Readable>> {
+    return this.accessor.getData(identifier, preferences);
   }
 
   public async getMetadata(identifier: ResourceIdentifier): Promise<RepresentationMetadata> {

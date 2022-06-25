@@ -1,6 +1,7 @@
 import type { Readable } from 'stream';
 import type { Representation } from '../../http/representation/Representation';
 import type { RepresentationMetadata } from '../../http/representation/RepresentationMetadata';
+import type { RepresentationPreferences } from '../../http/representation/RepresentationPreferences';
 import type { ResourceIdentifier } from '../../http/representation/ResourceIdentifier';
 import type { Guarded } from '../../util/GuardedStream';
 
@@ -28,7 +29,7 @@ export interface DataAccessor {
    * It can be assumed that the incoming identifier will always correspond to a document.
    * @param identifier - Identifier for which the data is requested.
    */
-  getData: (identifier: ResourceIdentifier) => Promise<Guarded<Readable>>;
+  getData: (identifier: ResourceIdentifier, preferences: RepresentationPreferences) => Promise<Guarded<Readable>>;
 
   /**
    * Returns the metadata corresponding to the identifier.

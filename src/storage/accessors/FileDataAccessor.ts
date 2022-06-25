@@ -5,6 +5,7 @@ import { ensureDir, remove, stat, lstat, createWriteStream, createReadStream, op
 import type { Quad } from 'rdf-js';
 import type { Representation } from '../../http/representation/Representation';
 import { RepresentationMetadata } from '../../http/representation/RepresentationMetadata';
+import type { RepresentationPreferences } from '../../http/representation/RepresentationPreferences';
 import type { ResourceIdentifier } from '../../http/representation/ResourceIdentifier';
 import { getLoggerFor } from '../../logging/LogUtil';
 import { NotFoundHttpError } from '../../util/errors/NotFoundHttpError';
@@ -52,7 +53,7 @@ export class FileDataAccessor implements DataAccessor {
    * Will return data stream directly to the file corresponding to the resource.
    * Will throw NotFoundHttpError if the input is a container.
    */
-  public async getData(identifier: ResourceIdentifier): Promise<Guarded<Readable>> {
+  public async getData(identifier: ResourceIdentifier, preferences: RepresentationPreferences): Promise<Guarded<Readable>> {
     const link = await this.resourceMapper.mapUrlToFilePath(identifier, false);
     const stats = await this.getStats(link.filePath);
     if (stats.isFile()) {

@@ -27,4 +27,5 @@ export interface RepresentationPreferences {
   datetime?: ValuePreferences;
   encoding?: ValuePreferences;
   language?: ValuePreferences;
+  secure?: ValuePreferences;
 }

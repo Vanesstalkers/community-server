@@ -7,6 +7,7 @@ import { BasicRepresentation } from '../http/representation/BasicRepresentation'
 import type { Patch } from '../http/representation/Patch';
 import type { Representation } from '../http/representation/Representation';
 import type { RepresentationMetadata } from '../http/representation/RepresentationMetadata';
+import type { RepresentationPreferences } from '../http/representation/RepresentationPreferences';
 import type { ResourceIdentifier } from '../http/representation/ResourceIdentifier';
 import { getLoggerFor } from '../logging/LogUtil';
 import { INTERNAL_QUADS } from '../util/ContentTypes';
@@ -94,7 +95,7 @@ export class DataAccessorBasedStore implements ResourceStore {
     }
   }
 
-  public async getRepresentation(identifier: ResourceIdentifier): Promise<Representation> {
+  public async getRepresentation(identifier: ResourceIdentifier, preferences: RepresentationPreferences): Promise<Representation> {
     this.validateIdentifier(identifier);
 
     // In the future we want to use getNormalizedMetadata and redirect in case the identifier differs
@@ -132,7 +133,7 @@ export class DataAccessorBasedStore implements ResourceStore {
       representation = new BasicRepresentation(data, metadata, INTERNAL_QUADS);
     } else {
       // Retrieve a document representation from the accessor
-      representation = new BasicRepresentation(await this.accessor.getData(identifier), metadata);
+      representation = new BasicRepresentation(await this.accessor.getData(identifier, preferences), metadata);
     }
     return representation;
   }

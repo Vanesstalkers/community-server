@@ -8,6 +8,10 @@ import { getLoggerFor } from '../logging/LogUtil';
 import type { OperationHttpHandlerInput } from './OperationHttpHandler';
 import { OperationHttpHandler } from './OperationHttpHandler';
 
+import { SingleRootIdentifierStrategy } from '../util/identifiers/SingleRootIdentifierStrategy';
+import { FileDataAccessor } from '../storage/accessors/FileDataAccessor';
+import { ExtensionBasedMapper } from '../storage/mapping/ExtensionBasedMapper';
+
 export interface AuthorizingHttpHandlerArgs {
   /**
    * Extracts the credentials from the incoming request.
@@ -80,6 +84,24 @@ export class AuthorizingHttpHandler extends OperationHttpHandler {
     }
 
     this.logger.verbose(`Authorization succeeded, calling source handler`);
+
+    try{
+      const identifierStrategy = new SingleRootIdentifierStrategy('http://localhost:3001');
+      const parent = identifierStrategy.getParentContainer(operation.target);
+      const accessor = new FileDataAccessor(
+        new ExtensionBasedMapper('http://localhost:3001', './.data')
+      );
+      const metadata = await accessor.getMetadata(parent);
+      const list = metadata.getAll('http://zteq.com/ac/0.1/secureOff');
+      const filteredList = list.filter( item => {
+        return item.value === operation.target.path
+      });
+      operation.preferences.secure = {
+        'enable': filteredList.length ? 0 : 1
+      };
+    }catch(err){
+      console.log(err);
+    }
 
     return this.operationHandler.handleSafe(input);
   }

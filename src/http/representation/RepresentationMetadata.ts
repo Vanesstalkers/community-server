@@ -1,4 +1,4 @@
-import { DataFactory, Store } from 'n3';
+import { DataFactory, Store, OTerm } from 'n3';
 import type { BlankNode, DefaultGraph, Literal, NamedNode, Quad, Term } from 'rdf-js';
 import { getLoggerFor } from '../../logging/LogUtil';
 import { InternalServerError } from '../../util/errors/InternalServerError';
@@ -295,7 +295,7 @@ export class RepresentationMetadata {
    *
    * @returns An array with all matches.
    */
-  public getAll(predicate: NamedNode, graph?: MetadataGraph): Term[] {
+  public getAll(predicate: OTerm, graph?: MetadataGraph): Term[] {
     return this.store.getQuads(this.id, predicate, null, graph ?? null)
       .map((quad): Term => quad.object);
   }

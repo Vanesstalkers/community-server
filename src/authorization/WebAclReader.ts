@@ -71,6 +71,9 @@ export class WebAclReader extends PermissionReader {
     // Rather than restricting the search to only the required modes,
     // we collect all modes in order to have complete metadata (for instance, for the WAC-Allow header).
     const acl = await this.getAcl(mainIdentifier, requiresContainerCheck);
+    // если понадобится принудительное вытягивание acl-родителя
+    //const acl = await this.getAcl(mainIdentifier, !this.identifierStrategy.isRootContainer(mainIdentifier));
+
     const permissions = await this.findPermissions(acl.targetAcl, credentials, isAclResource);
 
     if (requiresContainerCheck) {
