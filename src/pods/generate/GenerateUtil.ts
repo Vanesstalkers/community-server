@@ -16,7 +16,7 @@ export async function addGeneratedResources(identifier: ResourceIdentifier, sett
   const resources = generator.generate(identifier, settings);
   let count = 0;
   for await (const { identifier: resourceId, representation } of resources) {
-    await store.setRepresentation(resourceId, representation);
+    await store.setRepresentation(resourceId, representation/*, undefined, {secure: {enable: 1}} */);
     count += 1;
   }
   return count;

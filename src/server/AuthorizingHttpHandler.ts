@@ -87,18 +87,20 @@ export class AuthorizingHttpHandler extends OperationHttpHandler {
 
     try{
       const identifierStrategy = new SingleRootIdentifierStrategy('http://localhost:3001');
-      const parent = identifierStrategy.getParentContainer(operation.target);
-      const accessor = new FileDataAccessor(
-        new ExtensionBasedMapper('http://localhost:3001', './.data')
-      );
-      const metadata = await accessor.getMetadata(parent);
-      const list = metadata.getAll('http://zteq.com/ac/0.1/secureOff');
-      const filteredList = list.filter( item => {
-        return item.value === operation.target.path
-      });
-      operation.preferences.secure = {
-        'enable': filteredList.length ? 0 : 1
-      };
+      if (!identifierStrategy.isRootContainer(operation.target)) {
+        const parent = identifierStrategy.getParentContainer(operation.target);
+        const accessor = new FileDataAccessor(
+          new ExtensionBasedMapper('http://localhost:3001', './.data')
+        );
+        const metadata = await accessor.getMetadata(parent);
+        const list = metadata.getAll('http://zteq.com/ac/0.1/secureOff');
+        const filteredList = list.filter( item => {
+          return item.value === operation.target.path
+        });
+        operation.preferences.secure = {
+          'enable': filteredList.length ? 0 : 1
+        };
+      }
     }catch(err){
       console.log(err);
     }

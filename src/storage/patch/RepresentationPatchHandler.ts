@@ -1,10 +1,16 @@
 import type { Representation } from '../../http/representation/Representation';
+import { RepresentationMetadata } from '../../http/representation/RepresentationMetadata';
+import type { RepresentationPreferences } from '../../http/representation/RepresentationPreferences';
 import type { ResourceIdentifier } from '../../http/representation/ResourceIdentifier';
 import { getLoggerFor } from '../../logging/LogUtil';
 import { NotFoundHttpError } from '../../util/errors/NotFoundHttpError';
 import type { PatchHandlerInput } from './PatchHandler';
 import { PatchHandler } from './PatchHandler';
 import type { RepresentationPatcher } from './RepresentationPatcher';
+
+import { FileDataAccessor } from '../accessors/FileDataAccessor';
+import { ExtensionBasedMapper } from '../mapping/ExtensionBasedMapper';
+import type { SparqlUpdatePatch } from '../../http/representation/SparqlUpdatePatch';
 
 /**
  * Handles a patch operation by getting the representation from the store, applying a `RepresentationPatcher`,
@@ -23,7 +29,7 @@ export class RepresentationPatchHandler extends PatchHandler {
     this.patcher = patcher;
   }
 
-  public async handle({ source, patch, identifier }: PatchHandlerInput): Promise<ResourceIdentifier[]> {
+  public async handle({ source, patch, identifier, preferences }: PatchHandlerInput): Promise<ResourceIdentifier[]> {
     // Get the representation from the store
     let representation: Representation | undefined;
     try {
@@ -40,8 +46,50 @@ export class RepresentationPatchHandler extends PatchHandler {
 
     // Patch it
     const patched = await this.patcher.handleSafe({ patch, identifier, representation });
+    // тут видно кого патчим
+
+    try{
+      const accessor = new FileDataAccessor(
+        new ExtensionBasedMapper('http://localhost:3001', './.data')
+      );
+      const algebra = (patch as SparqlUpdatePatch).algebra;
+      const predicate = 'http://zteq.com/ac/0.1/secureOff';
+      if(algebra){
+        
+        const deleteData =
+          algebra.updates?.find((item: any)=>item.delete)?.delete
+          || algebra.delete
+          || {};
+        const secureResources = Object.values(deleteData)
+          .filter((quad: any) => quad.predicate.value === predicate)
+          .map((quad: any) => quad.object.value);
+        for(const path of secureResources){
+          const id:ResourceIdentifier = { path };
+          const data = await accessor.getData(id, {secure: {'enable': 0}});
+          await accessor.writeDocument(id, data, new RepresentationMetadata(id));
+        }
+        
+        const insertData =
+          algebra.updates?.find((item: any)=>item.insert)?.insert
+          || algebra.insert
+          || {};
+        const unsecureResources = Object.values(insertData)
+          .filter((quad: any) =>{
+            return quad.predicate.value === predicate;
+          })
+          .map((quad: any) => quad.object.value);
+        for(const path of unsecureResources){
+          const id:ResourceIdentifier = { path };
+          const data = await accessor.getData(id);
+          await accessor.writeDocument(id, data, new RepresentationMetadata(id), {secure: {'enable': 0}});
+        }
+      }
+    }catch(err){
+      console.log(err);
+    }
+    this.logger.debug(`Patching new resource ${identifier.path}`);
 
     // Write it back to the store
-    return source.setRepresentation(identifier, patched);
+    return source.setRepresentation(identifier, patched, undefined, preferences);
   }
 }

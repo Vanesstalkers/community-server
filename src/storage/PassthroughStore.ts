@@ -37,12 +37,12 @@ export class PassthroughStore<T extends ResourceStore = ResourceStore> implement
   }
 
   public async modifyResource(identifier: ResourceIdentifier, patch: Patch,
-    conditions?: Conditions): Promise<ResourceIdentifier[]> {
-    return this.source.modifyResource(identifier, patch, conditions);
+    conditions?: Conditions, preferences?: RepresentationPreferences): Promise<ResourceIdentifier[]> {
+    return this.source.modifyResource(identifier, patch, conditions, preferences);
   }
 
   public async setRepresentation(identifier: ResourceIdentifier, representation: Representation,
-    conditions?: Conditions): Promise<ResourceIdentifier[]> {
-    return this.source.setRepresentation(identifier, representation, conditions);
+    conditions?: Conditions, preferences?: RepresentationPreferences): Promise<ResourceIdentifier[]> {
+    return this.source.setRepresentation(identifier, representation, conditions, preferences);
   }
 }

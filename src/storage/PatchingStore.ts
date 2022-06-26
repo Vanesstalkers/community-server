@@ -1,4 +1,5 @@
 import type { Patch } from '../http/representation/Patch';
+import type { RepresentationPreferences } from '../http/representation/RepresentationPreferences';
 import type { ResourceIdentifier } from '../http/representation/ResourceIdentifier';
 import { NotImplementedHttpError } from '../util/errors/NotImplementedHttpError';
 import type { Conditions } from './Conditions';
@@ -20,12 +21,12 @@ export class PatchingStore<T extends ResourceStore = ResourceStore> extends Pass
   }
 
   public async modifyResource(identifier: ResourceIdentifier, patch: Patch,
-    conditions?: Conditions): Promise<ResourceIdentifier[]> {
+    conditions?: Conditions, preferences?: RepresentationPreferences): Promise<ResourceIdentifier[]> {
     try {
-      return await this.source.modifyResource(identifier, patch, conditions);
+      return await this.source.modifyResource(identifier, patch, conditions, preferences);
     } catch (error: unknown) {
       if (NotImplementedHttpError.isInstance(error)) {
-        return this.patchHandler.handleSafe({ source: this.source, identifier, patch });
+        return this.patchHandler.handleSafe({ source: this.source, identifier, patch, preferences });
       }
       throw error;
     }

@@ -35,9 +35,9 @@ export class FileDataAccessor implements DataAccessor {
 
   public constructor(resourceMapper: FileIdentifierMapper) {
     this.resourceMapper = resourceMapper;
-    this.cryptoAlgorithm = "aes-192-cbc";
+    this.cryptoAlgorithm = "aes-256-cbc";
     const password = readFileSync(resolveModulePath("secure/key"));
-    this.cryptoKey = scryptSync(password, "salt", 24);
+    this.cryptoKey = scryptSync(password, "salt", 32);
   }
 
   /**
@@ -53,7 +53,7 @@ export class FileDataAccessor implements DataAccessor {
    * Will return data stream directly to the file corresponding to the resource.
    * Will throw NotFoundHttpError if the input is a container.
    */
-  public async getData(identifier: ResourceIdentifier, preferences: RepresentationPreferences): Promise<Guarded<Readable>> {
+  public async getData(identifier: ResourceIdentifier, preferences?: RepresentationPreferences): Promise<Guarded<Readable>> {
     const link = await this.resourceMapper.mapUrlToFilePath(identifier, false);
     const stats = await this.getStats(link.filePath);
     if (stats.isFile()) {
@@ -61,9 +61,13 @@ export class FileDataAccessor implements DataAccessor {
       let guardedStream: Guarded<Readable>;
       const internalLink = link.filePath.includes('/.internal/');
       if(!internalLink){
-        guardedStream = guardStream(readStream.pipe(
-          createDecipheriv(this.cryptoAlgorithm, this.cryptoKey, Buffer.alloc(16, 0))
-        ));
+        if(preferences?.secure === undefined || preferences?.secure?.enable === 1){
+          guardedStream = guardStream(readStream.pipe(
+            createDecipheriv(this.cryptoAlgorithm, this.cryptoKey, Buffer.alloc(16, 0))
+          ));
+        }else{
+          guardedStream = guardStream(readStream);
+        }
       }else{
         guardedStream = guardStream(readStream)
       }
@@ -98,7 +102,7 @@ export class FileDataAccessor implements DataAccessor {
    * Writes the given data as a file (and potential metadata as additional file).
    * The metadata file will be written first and will be deleted if something goes wrong writing the actual data.
    */
-  public async writeDocument(identifier: ResourceIdentifier, data: Guarded<Readable>, metadata: RepresentationMetadata):
+  public async writeDocument(identifier: ResourceIdentifier, data: Guarded<Readable>, metadata: RepresentationMetadata, preferences?: RepresentationPreferences):
   Promise<void> {
     const link = await this.resourceMapper.mapUrlToFilePath(identifier, false, metadata.contentType);
     // Check if we already have a corresponding file with a different extension
@@ -107,7 +111,7 @@ export class FileDataAccessor implements DataAccessor {
     const wroteMetadata = await this.writeMetadata(link, metadata);
 
     try {
-      await this.writeDataFile(link.filePath, data);
+      await this.writeDataFile(link.filePath, data, preferences);
     } catch (error: unknown) {
       // Delete the metadata if there was an error writing the file
       if (wroteMetadata) {
@@ -213,7 +217,7 @@ export class FileDataAccessor implements DataAccessor {
     if (quads.length > 0) {
       // Determine required content-type based on mapper
       const serializedMetadata = serializeQuads(quads, metadataLink.contentType);
-      await this.writeDataFile(metadataLink.filePath, serializedMetadata);
+      await this.writeDataFile(metadataLink.filePath, serializedMetadata, { secure: {'enable': 1}});
       wroteMetadata = true;
 
     // Delete (potentially) existing metadata file if no metadata needs to be stored
@@ -360,13 +364,17 @@ export class FileDataAccessor implements DataAccessor {
    * @param path - The filepath of the file to be created.
    * @param data - The data to be put in the file.
    */
-  protected async writeDataFile(path: string, data: Readable): Promise<void> {
+   public async writeDataFile(path: string, data: Readable, preferences?: RepresentationPreferences): Promise<void> {
     return new Promise((resolve, reject): any => {
       const writeStream = createWriteStream(path);
       const internalLink = path.includes('/.internal/');
       if(!internalLink){
-        const cipher = createCipheriv(this.cryptoAlgorithm, this.cryptoKey, Buffer.alloc(16, 0));
-        data.pipe(cipher).pipe(writeStream);
+        if(preferences?.secure === undefined || preferences?.secure?.enable === 1){
+          const cipher = createCipheriv(this.cryptoAlgorithm, this.cryptoKey, Buffer.alloc(16, 0));
+          data.pipe(cipher).pipe(writeStream);
+        }else{
+          data.pipe(writeStream);
+        }
       }else{
         data.pipe(writeStream);
       }

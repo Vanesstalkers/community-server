@@ -181,7 +181,7 @@ export class DataAccessorBasedStore implements ResourceStore {
   }
 
   public async setRepresentation(identifier: ResourceIdentifier, representation: Representation,
-    conditions?: Conditions): Promise<ResourceIdentifier[]> {
+    conditions?: Conditions, preferences?: RepresentationPreferences): Promise<ResourceIdentifier[]> {
     this.validateIdentifier(identifier);
 
     // Check if the resource already exists
@@ -213,7 +213,7 @@ export class DataAccessorBasedStore implements ResourceStore {
     this.validateConditions(conditions, oldMetadata);
 
     // Potentially have to create containers if it didn't exist yet
-    return this.writeData(identifier, representation, isContainer, !oldMetadata, Boolean(oldMetadata));
+    return this.writeData(identifier, representation, isContainer, !oldMetadata, Boolean(oldMetadata), preferences);
   }
 
   public async modifyResource(identifier: ResourceIdentifier, patch: Patch,
@@ -360,7 +360,7 @@ export class DataAccessorBasedStore implements ResourceStore {
    * @returns Identifiers of resources that were possibly modified.
    */
   protected async writeData(identifier: ResourceIdentifier, representation: Representation, isContainer: boolean,
-    createContainers: boolean, exists: boolean): Promise<ResourceIdentifier[]> {
+    createContainers: boolean, exists: boolean, preferences?: RepresentationPreferences): Promise<ResourceIdentifier[]> {
     // Make sure the metadata has the correct identifier and correct type quads
     // Need to do this before handling container data to have the correct identifier
     representation.metadata.identifier = DataFactory.namedNode(identifier.path);
@@ -402,7 +402,7 @@ export class DataAccessorBasedStore implements ResourceStore {
 
     await (isContainer ?
       this.accessor.writeContainer(identifier, representation.metadata) :
-      this.accessor.writeDocument(identifier, representation.data, representation.metadata));
+      this.accessor.writeDocument(identifier, representation.data, representation.metadata, preferences));
 
     return [ ...modified, identifier ];
   }

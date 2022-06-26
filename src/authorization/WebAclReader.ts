@@ -246,7 +246,7 @@ export class WebAclReader extends PermissionReader {
     try {
       const acl = this.aclStrategy.getAuxiliaryIdentifier(from);
       this.logger.debug(`Trying to read the ACL document ${acl.path}`);
-      const data = await this.aclStore.getRepresentation(acl, { type: { [INTERNAL_QUADS]: 1 }});
+      const data = await this.aclStore.getRepresentation(acl, { type: { [INTERNAL_QUADS]: 1 }/*, secure: {'enable': 1} */});
       this.logger.info(`Reading ACL statements from ${acl.path}`);
 
       result[from.path] = await readableToQuads(data.data);

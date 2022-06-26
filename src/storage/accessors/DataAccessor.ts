@@ -58,7 +58,7 @@ export interface DataAccessor {
    * @param data - Data to store.
    * @param metadata - Metadata to store.
    */
-  writeDocument: (identifier: ResourceIdentifier, data: Guarded<Readable>, metadata: RepresentationMetadata) =>
+  writeDocument: (identifier: ResourceIdentifier, data: Guarded<Readable>, metadata: RepresentationMetadata, preferences?: RepresentationPreferences) =>
   Promise<void>;
 
   /**

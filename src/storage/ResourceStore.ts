@@ -44,6 +44,7 @@ export interface ResourceStore extends ResourceSet {
     identifier: ResourceIdentifier,
     representation: Representation,
     conditions?: Conditions,
+    preferences?: RepresentationPreferences,
   ) => Promise<ResourceIdentifier[]>;
 
   /**
@@ -85,5 +86,6 @@ export interface ResourceStore extends ResourceSet {
     identifier: ResourceIdentifier,
     patch: Patch,
     conditions?: Conditions,
+    preferences?: RepresentationPreferences,
   ) => Promise<ResourceIdentifier[]>;
 }
