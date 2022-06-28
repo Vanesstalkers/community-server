@@ -1,35 +1,36 @@
 <div id="authenticating">
-  <h1>Log in</h1>
+  <h1>Вход в систему</h1>
   <form method="post" id="mainForm">
     <p class="error" id="error"></p>
 
     <fieldset>
-      <legend>Your account</legend>
+      <legend>Ваша учетная запись</legend>
       <ol>
         <li>
-          <label for="email">Email</label>
+          <label for="email">Элекронная почта</label>
           <input id="email" type="email" name="email" autofocus>
         </li>
         <li>
-          <label for="password">Password</label>
+          <label for="password">Пароль</label>
           <input id="password" type="password" name="password">
         </li>
         <li class="checkbox">
-          <label><input type="checkbox" name="remember" value="yes" checked>Stay logged in</label>
+          <label><input type="checkbox" name="remember" value="yes" checked>Оставаться подключенным</label>
         </li>
       </ol>
     </fieldset>
 
-    <p class="actions"><button type="submit" name="submit">Log in</button></p>
+    <p class="actions"><button type="submit" name="submit">Войти в систему</button></p>
 
     <ul class="actions">
-      <li><a id="register-link" href="" class="link">Sign up</a></li>
-      <li><a id="forgot-link"  href="" class="link">Forgot password</a></li>
+      <li><a id="register-link" href="" class="link">Зарегистрироваться</a></li>
+      <li><a id="forgot-link"  href="" class="link">Восстановить пароль</a></li>
     </ul>
   </form>
 </div>
 <div id="not-authenticating">
-  <h1>Please log in through an app</h1>
+  <h1>Пожалуйста, подключитесь через А-браузер.</h1>
+  <!-- <p><strong>To log in and access documents, you need to use a Solid app.</strong></p>
   <p><strong>To log in and access documents, you need to use a Solid app.</strong></p>
   <p>This server provides secure storage, but it is not a client app.</p>
   <p>
@@ -42,7 +43,7 @@
     use a library such as
     <a href="https://github.com/inrupt/solid-client-authn-js" class="link"><code>solid-client-authn-js</code></a>
     to initiate an OIDC authentication flow.
-  </p>
+  </p> -->
 </div>
 
 

@@ -1,5 +1,5 @@
-<h1>Authorize</h1>
-<p>The following client wants to do authorized requests in your name:</p>
+<h1>Авторизация</h1>
+<p>Это приложение просит разрешить ему совершать авторизованные запросы от вашего имени:</p>
 <ul id="clientInfo">
 </ul>
 <form method="post" id="mainForm">
@@ -8,12 +8,12 @@
   <fieldset>
     <ol>
       <li class="checkbox">
-        <label><input type="checkbox" name="remember" value="yes" checked>Remember this client</label>
+        <label><input type="checkbox" name="remember" value="yes" checked>Запомнить это приложение</label>
       </li>
     </ol>
   </fieldset>
 
-  <p class="actions"><button autofocus type="submit" name="submit">Consent</button></p>
+  <p class="actions"><button autofocus type="submit" name="submit">Подтвердить</button></p>
 </form>
 
 <script>
@@ -33,7 +33,7 @@
   (async() => {
     const res = await fetch('', { headers: { accept: 'application/json' } })
     const { client } = await res.json();
-    addClientInfo('Name', client.client_name);
+    addClientInfo('Название', client.client_name);
     addClientInfo('ID', client.client_id);
   })()
 

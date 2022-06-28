@@ -4,26 +4,24 @@
 %>
 
 <fieldset>
-  <legend>Your WebID</legend>
+  <legend>Ваш WebID</legend>
   <p>
-    A <em>WebID</em> is a unique identifier for you
-    in the form of a URL.
+    <em>WebID</em> это ваш уникальный идентификатор.
     <br>
-    You WebID lets you log in to Solid apps
-    and access non-public data in Pods.
+    Ваш WebID позволяет вам пользоваться А-браузером и получать доступ к А-серверу.
   </p>
   <ol>
     <li class="radio">
       <label>
         <input type="radio" id="createWebIdOn" name="createWebId" value="on"<%
         if (isBlankForm || prefilled.createWebId) { %> checked<% } %>>
-        Create a new WebID for my Pod.
+        Создать новый WebID
       </label>
       <p id="createWebIdForm">
-        Please also create a Pod below, since your WebID will be stored there.
+        Пожалуйста, создайте так же ваше личное хранилище чуть ниже, чтобы ваш WеbID хранился в нем.
       </p>
     </li>
-    <li class="radio">
+    <!-- <li class="radio">
       <label>
         <input type="radio" id="createWebIdOff" name="createWebId" value=""<%
         if (!isBlankForm && !prefilled.createWebId) { %> checked<% } %>>
@@ -42,21 +40,18 @@
           </label>
         </li>
       </ol>
-    </li>
+    </li> -->
   </ol>
 </fieldset>
 
 <fieldset>
-  <legend>Your Pod</legend>
-  <p>
-    A Pod is a storage place for your data.
-  </p>
+  <legend>Ваше личное хранилище</legend>
   <ol>
     <li class="checkbox">
       <label>
         <input type="checkbox" id="createPod" name="createPod"<%
         if (isBlankForm || prefilled.createPod) { %> checked<% } %>>
-        Create a new Pod with my WebID as owner<% if (!locals.allowRoot) { %>.<% } %>
+        Создать новое личное хранилище с WebID в качестве владельца<% if (!locals.allowRoot) { %>.<% } %>
       </label>
       <ol id="createPodForm">
         <% if (locals.allowRoot) { %>
@@ -76,7 +71,7 @@
           </li>
         <% } %>
         <li id="podNameForm">
-          <label for="podName">Pod name:</label>
+          <label for="podName">Название:</label>
           <input id="podName" type="text" name="podName" value="<%= prefilled.podName || '' %>">
         </li>
       </ol>
@@ -85,24 +80,24 @@
 </fieldset>
 
 <fieldset>
-  <legend>Your account</legend>
+  <legend>Ваша учетная запись</legend>
   <div>
     <p>
-      Choose the credentials you want to use to log in to this server in the future.
+      Заполните ваши учетные данные, с которыми вы ходите авторизоваться на А-сервере в будущем.
     </p>
     <ol>
       <li>
-        <label for="email">Email:</label>
+        <label for="email">Электронная почта:</label>
         <input id="email" type="text" name="email" value="<%= prefilled.email || '' %>" >
       </li>
     </ol>
     <ol id="passwordForm">
       <li>
-        <label for="password">Password:</label>
+        <label for="password">Пароль:</label>
         <input id="password" type="password" name="password">
       </li>
       <li>
-        <label for="confirmPassword">Confirm password:</label>
+        <label for="confirmPassword">Подтверждение:</label>
         <input id="confirmPassword" type="password" name="confirmPassword">
       </li>
     </ol>
