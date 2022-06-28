@@ -1,4 +1,6 @@
 import type { LogLevel } from './LogLevel';
+import { joinFilePath } from '../util/PathUtil';
+import { promises as fsPromises } from 'fs';
 
 /**
  * Logs messages on a specific level.
@@ -72,6 +74,8 @@ export interface Logger extends SimpleLogger {
    * @param meta - Optional metadata to include in the log message.
    */
   silly: (message: string) => Logger;
+
+  file: (message: string) => void;
 }
 
 /**
@@ -103,6 +107,13 @@ export abstract class BaseLogger implements Logger {
 
   public silly(message: string): Logger {
     return this.log('silly', message);
+  }
+
+  public async file(message: string): Promise<void> {
+    const dateNow = new Date().toISOString();
+    const fileRoot = joinFilePath(process.cwd(), '/logs/');
+    const testFile = joinFilePath(fileRoot, `/${dateNow.split('T')[0]}.txt`);
+    await fsPromises.appendFile(testFile, '\n' + dateNow + ' :: ' + message);
   }
 }
 

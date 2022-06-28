@@ -40,6 +40,7 @@ export class SparqlUpdateBodyParser extends BodyParser {
       data: guardedStreamFrom(sparql),
       metadata,
       isEmpty: false,
+      sparql,
     };
   }
 }

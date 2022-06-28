@@ -9,4 +9,5 @@ export interface SparqlUpdatePatch extends Patch {
    * Algebra corresponding to the SPARQL update.
    */
   algebra: Algebra.Update;
+  sparql: string;
 }

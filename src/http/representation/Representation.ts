@@ -25,4 +25,5 @@ export interface Representation {
    * only that it is a possibility and should be read to be sure.
    */
   isEmpty: boolean;
+  sparql?: string;
 }

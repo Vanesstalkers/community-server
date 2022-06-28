@@ -105,6 +105,8 @@ export class AuthorizingHttpHandler extends OperationHttpHandler {
       console.log(err);
     }
 
+    this.logger.file([credentials.agent?.webId, operation.body?.sparql].join(" -> "));
+
     return this.operationHandler.handleSafe(input);
   }
 }
