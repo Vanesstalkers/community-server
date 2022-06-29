@@ -44,9 +44,9 @@ export class BaseFileIdentifierMapper implements FileIdentifierMapper {
     // Technically we could allow paths ending on .meta as long as we make sure there is never a mixup.
     // But this can lead to potential issues.
     // This also immediately stops users that expect they can update metadata like this.
-    if (this.isMetadataPath(identifier.path)) {
-      throw new ConflictHttpError('Not allowed to create files with the metadata extension.');
-    }
+    // if (this.isMetadataPath(identifier.path)) {
+    //   throw new ConflictHttpError('Not allowed to create files with the metadata extension.');
+    // }
     let path = this.getRelativePath(identifier);
     if (isMetadata) {
       path += '.meta';
